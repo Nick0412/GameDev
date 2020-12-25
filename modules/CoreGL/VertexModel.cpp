@@ -27,7 +27,7 @@ namespace CoreGL
         glVertexArrayAttribBinding(m_vao_id, attribute_index, 0);
     }
 
-    void VertexModel::storeIndexData(const std::vector<GLuint>& indicies) const
+    void VertexModel::storeIndexData(const std::vector<GLuint>& indicies)
     {
         // Create an element (also called index) buffer and specify index data in it.
         GLuint ebo_id{0};
@@ -37,6 +37,9 @@ namespace CoreGL
         // Set the element buffer associated with the vao. 
         // The element buffer is a special buffer and does not need a bidning point or format specification.
         glVertexArrayElementBuffer(m_vao_id, ebo_id);
+
+        // TODO: This copy assignment can be expensive if the vector is too long. Re-design later.
+        m_indicies = indicies;
     }
 
     void VertexModel::bind() const
@@ -47,6 +50,11 @@ namespace CoreGL
     void VertexModel::unbind() const
     {
         glBindVertexArray(0);
+    }
+
+    void VertexModel::draw() const
+    {
+        glDrawElements(GL_TRIANGLES, m_indicies.size(), GL_UNSIGNED_INT, m_indicies.data());
     }
 
 }
