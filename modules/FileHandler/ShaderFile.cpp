@@ -15,7 +15,7 @@ namespace File
             string_stream << file_stream.rdbuf();
             file_text = string_stream.str();
         }
-        catch (const std::exception* ex)
+        catch (const std::exception& ex)
         {
             throw;
         }
