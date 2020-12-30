@@ -4,12 +4,12 @@ namespace CoreGL
 {
 
 #ifdef SHADER_DIR
-    const std::string g_shader_path = SHADER_DIR;
+    static const std::string g_shader_path = SHADER_DIR;
 #else
-    const std::string g_shader_path = "UNDEFINED";
+    static const std::string g_shader_path = "UNDEFINED";
 #endif
 
-    std::string readShaderFile(const std::string& file)
+    static std::string readShaderFile(const std::string& file)
     {
         std::string file_text;
         std::ifstream file_stream;
@@ -31,7 +31,7 @@ namespace CoreGL
         return file_text;
     }
 
-    GLuint createShader(GLenum shader_type, const std::string& shader_file)
+    static GLuint createShader(GLenum shader_type, const std::string& shader_file)
     {
         GLuint shader_id = glCreateShader(shader_type);
         std::string full_shader_file = g_shader_path + shader_file;
@@ -55,6 +55,20 @@ namespace CoreGL
         }
     }
 
+    static void checkProgramLinkStatus(GLuint program_id)
+    {
+        glLinkProgram(program_id);
+        GLint result;
+        glGetProgramiv(program_id, GL_LINK_STATUS, &result);
+        if (result == GL_FALSE)
+        {
+            char info_log[1024];
+            glGetProgramInfoLog(program_id, 1024, nullptr, info_log);
+            auto ex = std::string("Program Link Error: ") + info_log;
+            throw std::runtime_error(ex);
+        }
+    }
+
     Program::Program()
     : m_program_id(glCreateProgram())
     {
@@ -69,11 +83,9 @@ namespace CoreGL
         glAttachShader(m_program_id, shader_id);
     }
 
-    void Program::linkProgram()
+    void Program::linkProgram() const
     {   
         glLinkProgram(m_program_id);
-        std::cout << " TESTING 1: " + m_program_id << "\n";
-        std::cout << "ERROR " << glGetError() << "\n";
         checkProgramLinkStatus();
         std::cout << " Testing 2: " + m_program_id << "\n";
         glValidateProgram(m_program_id);
@@ -84,19 +96,4 @@ namespace CoreGL
         glUseProgram(m_program_id);
     }
 
-    void Program::checkProgramLinkStatus()
-    {
-        glLinkProgram(m_program_id);
-        GLint result;
-        glGetProgramiv(m_program_id, GL_LINK_STATUS, &result);
-        std::cout << "ERROR 1" << glGetError() << "\n";
-        if (result == GL_FALSE)
-        {
-            std::cout << "ERROR 2" << glGetError() << "\n";
-            char info_log[1024];
-            glGetProgramInfoLog(m_program_id, 1024, nullptr, info_log);
-            auto ex = std::string("Program Link Error: ") + info_log;
-            throw std::runtime_error(ex.c_str());
-        }
-    }
 }

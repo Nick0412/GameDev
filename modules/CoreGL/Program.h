@@ -13,12 +13,10 @@ namespace CoreGL
     {
     private:
         GLuint m_program_id;
-
-        void checkProgramLinkStatus();
     public:
         Program();
         void attachShader(GLenum shader_type, const std::string& shader_file) const;
-        void linkProgram();
+        void linkProgram() const;
         void useProgram() const;
     };
 }

@@ -1,5 +1,3 @@
-add_compile_options(/Wall)
-
 add_subdirectory(CoreGL)
 
 add_executable(main main.cpp)
