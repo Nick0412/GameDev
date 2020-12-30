@@ -86,7 +86,7 @@ namespace CoreGL
     void Program::linkProgram() const
     {   
         glLinkProgram(m_program_id);
-        checkProgramLinkStatus();
+        checkProgramLinkStatus(m_program_id);
         std::cout << " Testing 2: " + m_program_id << "\n";
         glValidateProgram(m_program_id);
     }
