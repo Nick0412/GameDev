@@ -4,7 +4,7 @@
 #include "glad/glad.h"
 
 #include <fstream>
-#include <sstream>
+#include <sstream>  
 #include <string>
 
 namespace CoreGL
@@ -16,7 +16,8 @@ namespace CoreGL
 
     public:
         Program();
-        void attachShader(GLenum shader_type, const std::string& shader_file);
+        void attachShader(GLenum shader_type, const std::string& shader_file) const;
+        void linkProgram() const;
     };
 }
 

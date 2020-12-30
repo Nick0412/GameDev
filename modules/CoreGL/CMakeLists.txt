@@ -1,3 +1,6 @@
-add_library(CoreGL STATIC VertexModel.cpp)
+add_library(CoreGL STATIC 
+    VertexModel.cpp
+    "Program.cpp"
+)
 target_include_directories(CoreGL PUBLIC .)
 target_link_libraries(CoreGL glad)

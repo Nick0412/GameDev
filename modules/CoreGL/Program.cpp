@@ -2,6 +2,43 @@
 
 namespace CoreGL
 {
+    static void checkProgramLinkStatus(GLuint program_id)
+    {
+        GLint result;
+        glGetProgramiv(program_id, GL_LINK_STATUS, &result);
+        if (result == GL_FALSE)
+        {
+            char info_log[1024];
+            glGetProgramInfoLog(program_id, 1024, nullptr, info_log);
+            auto ex = std::string("Program Link Error: ") + info_log;
+            throw std::runtime_error(ex.c_str());
+        }
+    }
+
+    static GLuint createShader(GLenum shader_type, const std::string& shader_file)
+    {
+        GLuint shader_id = glCreateShader(shader_type);
+        std::string full_shader_file = /*g_shader_path +*/ shader_file;
+        std::string shader_source = readShaderFile(full_shader_file);
+        auto shader_source_cast = static_cast<const GLchar*>(shader_source.c_str());
+        glShaderSource(shader_id, 1, &shader_source_cast, nullptr);
+
+        return shader_id;
+    }
+
+    static void checkShaderCompileStatus(GLuint shader_id)
+    {
+        GLint result;
+        glGetShaderiv(shader_id, GL_COMPILE_STATUS, &result);
+        if (result == GL_FALSE)
+        {
+            char info_log[1024];
+            glGetShaderInfoLog(shader_id, 1024, nullptr, info_log);
+            auto ex = std::string("Shader Compile Error: ") + info_log;
+            throw std::runtime_error(ex.c_str());
+        }
+    }
+
     static std::string readShaderFile(const std::string& file)
     {
         std::string file_text;
@@ -21,5 +58,25 @@ namespace CoreGL
         }
 
         return file_text;
+    }
+
+    Program::Program()
+    : m_program_id{glCreateProgram()}
+    {
+
+    }
+
+    void Program::attachShader(GLenum shader_type, const std::string& shader_file) const
+    {
+        GLuint shader_id = createShader(shader_type, shader_file);
+        glCompileShader(shader_id);
+        checkShaderCompileStatus(shader_id);
+    }
+
+    void Program::linkProgram() const
+    {
+        glLinkProgram(m_program_id);
+        checkProgramLinkStatus(m_program_id);
+        glValidateProgram(m_program_id);
     }
 }
