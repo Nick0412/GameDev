@@ -7,12 +7,12 @@ namespace CoreGL
         glCreateVertexArrays(1, &m_vao_id);
     }
 
-    void VertexModel::storeDataInAttribute(const GLuint attribute_index, const GLuint attribute_size, const std::vector<GLfloat>& data) const
+    void VertexModel::storeDataInAttribute(const GLuint attribute_index, const GLint attribute_size, const std::vector<GLfloat>& data) const
     {
         // Create a buffer and specify the data in it.
         GLuint vbo_id{0};
         glCreateBuffers(1, &vbo_id);
-        glNamedBufferData(vbo_id, sizeof(GLfloat)*data.size(), data.data(), GL_DYNAMIC_STORAGE_BIT);
+        glNamedBufferData(vbo_id, sizeof(GLfloat)*data.size(), data.data(), GL_STATIC_DRAW);
 
         // Associate the buffer with a binding point.
         glVertexArrayVertexBuffer(m_vao_id, 0, vbo_id, 0, 0);
@@ -32,7 +32,7 @@ namespace CoreGL
         // Create an element (also called index) buffer and specify index data in it.
         GLuint ebo_id{0};
         glCreateBuffers(1, &ebo_id);
-        glNamedBufferData(ebo_id, sizeof(GLuint)*indicies.size(), indicies.data(), GL_DYNAMIC_STORAGE_BIT);
+        glNamedBufferData(ebo_id, sizeof(GLuint)*indicies.size(), indicies.data(), GL_STATIC_DRAW);
 
         // Set the element buffer associated with the vao. 
         // The element buffer is a special buffer and does not need a bidning point or format specification.
@@ -54,7 +54,7 @@ namespace CoreGL
 
     void VertexModel::draw() const
     {
-        glDrawElements(GL_TRIANGLES, m_indicies.size(), GL_UNSIGNED_INT, m_indicies.data());
+        glDrawElements(GL_TRIANGLES, m_indicies.size(), GL_UNSIGNED_INT, 0);
     }
 
 }

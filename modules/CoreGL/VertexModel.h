@@ -20,7 +20,7 @@ namespace CoreGL
         VertexModel& operator=(const VertexModel& rhs) = delete;
         VertexModel& operator=(VertexModel&& rhs) = delete;
 
-        void storeDataInAttribute(const GLuint attribute_index, const GLuint attribute_size, const std::vector<GLfloat>& data) const;
+        void storeDataInAttribute(const GLuint attribute_index, const GLint attribute_size, const std::vector<GLfloat>& data) const;
         void storeIndexData(const std::vector<GLuint>& indicies);
         void bind() const;
         void unbind() const;

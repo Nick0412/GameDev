@@ -49,9 +49,15 @@ int main()
         model.storeDataInAttribute(0, 3, positions);
         model.storeIndexData(indicies);
 
+        CoreGL::Program program;
+        program.attachShader(GL_VERTEX_SHADER, "simple-vert.glsl");
+        program.attachShader(GL_FRAGMENT_SHADER, "simple-frag.glsl");
+        program.linkProgram();
+
         // Main loop that keeps the window open until it is closed by the user.
         while (!glfwWindowShouldClose(window))
         {
+            program.useProgram();
             model.bind();
             model.draw();
             model.unbind();
@@ -71,3 +77,4 @@ int main()
 
     return 0;
 }
+
