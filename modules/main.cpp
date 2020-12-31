@@ -9,6 +9,45 @@
 #include <stdexcept>
 #include <vector>
 
+void message_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, GLchar const* message, void const* user_param)
+{
+	auto const src_str = [source]() {
+		switch (source)
+		{
+		case GL_DEBUG_SOURCE_API: return "API";
+		case GL_DEBUG_SOURCE_WINDOW_SYSTEM: return "WINDOW SYSTEM";
+		case GL_DEBUG_SOURCE_SHADER_COMPILER: return "SHADER COMPILER";
+		case GL_DEBUG_SOURCE_THIRD_PARTY: return "THIRD PARTY";
+		case GL_DEBUG_SOURCE_APPLICATION: return "APPLICATION";
+		case GL_DEBUG_SOURCE_OTHER: return "OTHER";
+		}
+	}();
+
+	auto const type_str = [type]() {
+		switch (type)
+		{
+		case GL_DEBUG_TYPE_ERROR: return "ERROR";
+		case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: return "DEPRECATED_BEHAVIOR";
+		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: return "UNDEFINED_BEHAVIOR";
+		case GL_DEBUG_TYPE_PORTABILITY: return "PORTABILITY";
+		case GL_DEBUG_TYPE_PERFORMANCE: return "PERFORMANCE";
+		case GL_DEBUG_TYPE_MARKER: return "MARKER";
+		case GL_DEBUG_TYPE_OTHER: return "OTHER";
+		}
+	}();
+
+	auto const severity_str = [severity]() {
+		switch (severity) {
+		case GL_DEBUG_SEVERITY_NOTIFICATION: return "NOTIFICATION";
+		case GL_DEBUG_SEVERITY_LOW: return "LOW";
+		case GL_DEBUG_SEVERITY_MEDIUM: return "MEDIUM";
+		case GL_DEBUG_SEVERITY_HIGH: return "HIGH";
+		}
+	}();
+
+	std::cout << src_str << ", " << type_str << ", " << severity_str << ", " << id << ": " << message << '\n';
+}
+
 int main()
 {
     std::cout << "Beginning Program\n";
@@ -22,7 +61,7 @@ int main()
 	};
 
 	// Indicies
-	std::vector<unsigned int> indicies = {
+	std::vector<GLint> indicies = {
 		0,1,3,	// Traingle 1 {V0, V1, V3}
 		3,1,2	// Triangle 2 {V3, V1, V2}
 	};
@@ -32,6 +71,8 @@ int main()
     {
         // Initalize GLFW and create a window that's 800x800 pixels
         if (!glfwInit()) { throw std::runtime_error("GLFW failed to init."); }
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         GLFWwindow* window = glfwCreateWindow(800, 800, "Window Title", NULL, NULL);
         if (!window)
         {
@@ -45,33 +86,49 @@ int main()
         gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
         glfwSwapInterval(1);
 
-        GLuint m_vao_id;
-        glCreateVertexArrays(1, &m_vao_id);
-        GLuint vbo_id_1;
-        glCreateBuffers(1, &vbo_id_1);
-        glNamedBufferData(vbo_id_1, sizeof(GLfloat)*12, positions.data(), GL_STATIC_DRAW);
-        GLuint vbo_id_2;
-        glCreateBuffers(1, &vbo_id_2);
-        glNamedBufferStorage(vbo_id_2, sizeof(GLfloat)*12, indicies.data(), GL_DYNAMIC_STORAGE_BIT);
-        glVertexArrayVertexBuffer(m_vao_id, 0, vbo_id_1, 0, 0);
-        glVertexArrayElementBuffer(m_vao_id, vbo_id_2);
-        glEnableVertexArrayAttrib(m_vao_id, 0);
-        glVertexArrayAttribFormat(m_vao_id, 0, 3, GL_FLOAT, GL_FALSE, 0);
-        glVertexArrayAttribBinding(m_vao_id, 0, 0);
+        glEnable(GL_DEBUG_OUTPUT);
+        glDebugMessageCallback(message_callback, nullptr);
 
-        // glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(vertex_t));
-        // glVertexArrayElementBuffer(vao, ibo);
+        std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << "\n";
+        std::cout << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
+        std::cout << "Renderer: " << glGetString(GL_RENDERER) << "\n";
+        std::cout << "Vendor: " << glGetString(GL_VENDOR) << "\n";
 
-        // glEnableVertexArrayAttrib(vao, 0);
-        // glEnableVertexArrayAttrib(vao, 1);
-        // glEnableVertexArrayAttrib(vao, 2);
+    
+        // GLuint vao;
+        // glGenVertexArrays(1, &vao);
+        // glBindVertexArray(vao);
+        
+        // GLuint ibo;
+        // glGenBuffers(1, &ibo);
+        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        // glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies.size()*sizeof(GLint), indicies.data(), GL_STATIC_DRAW);
 
-        // glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(vertex_t, pos));
-        // glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(vertex_t, nrm));
-        // glVertexArrayAttribFormat(vao, 2, 2, GL_FLOAT, GL_FALSE, offsetof(vertex_t, tex));
+        // GLuint vbo;
+        // glGenBuffers(1, &vbo);
+        // glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        // glBufferData(GL_ARRAY_BUFFER, positions.size()*sizeof(GLfloat), positions.data(), GL_STATIC_DRAW);
+        // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        // glEnableVertexAttribArray(0);
+    
+        GLuint vao;
+        glCreateVertexArrays(1, &vao);
 
-        // glVertexArrayAttribBinding(vao, 0, 0);
+        GLuint vbo;
+        glCreateBuffers(1, &vbo);
+        glNamedBufferStorage(vbo, positions.size()*sizeof(GLfloat), positions.data(), GL_DYNAMIC_STORAGE_BIT);
+        glVertexArrayVertexBuffer(vao, 0, vbo, 0, 3*sizeof(GLfloat));
+        glEnableVertexArrayAttrib(vao, 0);
+        glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, 0);
+        glVertexArrayAttribBinding(vao, 0, 0);
 
+        GLuint ibo;
+        glCreateBuffers(1, &ibo);
+        glNamedBufferStorage(ibo, sizeof(GLint)*indicies.size(), indicies.data(), GL_DYNAMIC_STORAGE_BIT);
+        glVertexArrayElementBuffer(vao, ibo);
+
+        glBindVertexArray(vao);
+        
         CoreGL::Program program;
         program.attachShader(GL_VERTEX_SHADER, "simple-vert.glsl");
         program.attachShader(GL_FRAGMENT_SHADER, "simple-frag.glsl");
@@ -81,10 +138,10 @@ int main()
         while (!glfwWindowShouldClose(window))
         {
             glClear(GL_COLOR_BUFFER_BIT);
-            glBindVertexArray(m_vao_id);
             program.useProgram();
-            
+
             glDrawElements(GL_TRIANGLES, indicies.size(), GL_UNSIGNED_INT, 0);
+
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
