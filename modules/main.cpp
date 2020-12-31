@@ -2,7 +2,7 @@
 #include "glfw/glfw3.h"
 
 #include "Program.h"
-#include "VertexModel.h"
+// #include "VertexModel.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -14,7 +14,7 @@ int main()
     std::cout << "Beginning Program\n";
 
     // Data 
-	std::vector<float> positions = {
+	std::vector<GLfloat> positions = {
 		-0.5, 0.5, 0,	// V0
 		-0.5, -0.5, 0,	// V1
 		0.5, -0.5, 0,	// V2
@@ -45,9 +45,32 @@ int main()
         gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
         glfwSwapInterval(1);
 
-        CoreGL::VertexModel model;
-        model.storeDataInAttribute(0, 3, positions);
-        model.storeIndexData(indicies);
+        GLuint m_vao_id;
+        glCreateVertexArrays(1, &m_vao_id);
+        GLuint vbo_id_1;
+        glCreateBuffers(1, &vbo_id_1);
+        glNamedBufferData(vbo_id_1, sizeof(GLfloat)*12, positions.data(), GL_STATIC_DRAW);
+        GLuint vbo_id_2;
+        glCreateBuffers(1, &vbo_id_2);
+        glNamedBufferStorage(vbo_id_2, sizeof(GLfloat)*12, indicies.data(), GL_DYNAMIC_STORAGE_BIT);
+        glVertexArrayVertexBuffer(m_vao_id, 0, vbo_id_1, 0, 0);
+        glVertexArrayElementBuffer(m_vao_id, vbo_id_2);
+        glEnableVertexArrayAttrib(m_vao_id, 0);
+        glVertexArrayAttribFormat(m_vao_id, 0, 3, GL_FLOAT, GL_FALSE, 0);
+        glVertexArrayAttribBinding(m_vao_id, 0, 0);
+
+        // glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(vertex_t));
+        // glVertexArrayElementBuffer(vao, ibo);
+
+        // glEnableVertexArrayAttrib(vao, 0);
+        // glEnableVertexArrayAttrib(vao, 1);
+        // glEnableVertexArrayAttrib(vao, 2);
+
+        // glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(vertex_t, pos));
+        // glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(vertex_t, nrm));
+        // glVertexArrayAttribFormat(vao, 2, 2, GL_FLOAT, GL_FALSE, offsetof(vertex_t, tex));
+
+        // glVertexArrayAttribBinding(vao, 0, 0);
 
         CoreGL::Program program;
         program.attachShader(GL_VERTEX_SHADER, "simple-vert.glsl");
@@ -57,11 +80,11 @@ int main()
         // Main loop that keeps the window open until it is closed by the user.
         while (!glfwWindowShouldClose(window))
         {
+            glClear(GL_COLOR_BUFFER_BIT);
+            glBindVertexArray(m_vao_id);
             program.useProgram();
-            model.bind();
-            model.draw();
-            model.unbind();
-
+            
+            glDrawElements(GL_TRIANGLES, indicies.size(), GL_UNSIGNED_INT, 0);
             glfwSwapBuffers(window);
             glfwPollEvents();
         }

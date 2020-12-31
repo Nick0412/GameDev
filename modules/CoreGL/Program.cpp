@@ -25,7 +25,7 @@ namespace CoreGL
         catch (const std::exception& ex)
         {
             auto e = std::string(ex.what()) + " " + file;
-            throw std::runtime_error(e.c_str());
+            throw std::runtime_error(e);
         }
 
         return file_text;
@@ -42,7 +42,7 @@ namespace CoreGL
         return shader_id;
     }
 
-    void checkShaderCompileStatus(GLuint shader_id)
+    static void checkShaderCompileStatus(GLuint shader_id)
     {
         GLint result;
         glGetShaderiv(shader_id, GL_COMPILE_STATUS, &result);
@@ -87,7 +87,6 @@ namespace CoreGL
     {   
         glLinkProgram(m_program_id);
         checkProgramLinkStatus(m_program_id);
-        std::cout << " Testing 2: " + m_program_id << "\n";
         glValidateProgram(m_program_id);
     }
 
