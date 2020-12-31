@@ -15,7 +15,7 @@ namespace CoreGL
         glNamedBufferData(vbo_id, sizeof(GLfloat)*data.size(), data.data(), GL_STATIC_DRAW);
 
         // Associate the buffer with a binding point.
-        glVertexArrayVertexBuffer(m_vao_id, 0, vbo_id, 0, 0);
+        glVertexArrayVertexBuffer(m_vao_id, 0, vbo_id, 0, attribute_size*sizeof(GLfloat));
 
         // Enable a vertex attribute and specify the format of the data.
         // Note: this does not load any data yet, only specifies what the data format is.
@@ -27,7 +27,7 @@ namespace CoreGL
         glVertexArrayAttribBinding(m_vao_id, attribute_index, 0);
     }
 
-    void VertexModel::storeIndexData(const std::vector<GLuint>& indicies)
+    void VertexModel::storeIndexData(const std::vector<GLint>& indicies)
     {
         // Create an element (also called index) buffer and specify index data in it.
         GLuint ebo_id{0};

@@ -11,7 +11,7 @@ namespace CoreGL
     {
     private:
         GLuint m_vao_id;
-        std::vector<GLuint> m_indicies;
+        std::vector<GLint> m_indicies;
     public:
         VertexModel();
         ~VertexModel() = default;
@@ -21,7 +21,7 @@ namespace CoreGL
         VertexModel& operator=(VertexModel&& rhs) = delete;
 
         void storeDataInAttribute(const GLuint attribute_index, const GLint attribute_size, const std::vector<GLfloat>& data) const;
-        void storeIndexData(const std::vector<GLuint>& indicies);
+        void storeIndexData(const std::vector<GLint>& indicies);
         void bind() const;
         void unbind() const;
         void draw() const;
