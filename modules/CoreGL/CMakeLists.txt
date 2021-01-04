@@ -4,6 +4,7 @@ add_library(CoreGL STATIC
     VertexModel.cpp
     "Program.cpp"
     Uniform.cpp
+    Shader.cpp
 )
 target_include_directories(CoreGL PUBLIC .)
-target_link_libraries(CoreGL glad glm)
+target_link_libraries(CoreGL glad glm utility)

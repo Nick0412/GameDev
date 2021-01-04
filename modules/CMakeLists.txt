@@ -1,3 +1,5 @@
+add_subdirectory(Utility)
+
 add_subdirectory(CoreGL)
 
 add_executable(main main.cpp)

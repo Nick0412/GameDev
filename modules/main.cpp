@@ -2,6 +2,7 @@
 #include "glfw/glfw3.h"
 
 #include "Program.h"
+#include "Shader.h"
 #include "VertexModel.h"
 
 #include <cstdlib>
@@ -9,6 +10,7 @@
 #include <stdexcept>
 #include <vector>
 
+/*
 int main()
 {
     std::cout << "Beginning Program\n";
@@ -81,4 +83,19 @@ int main()
     }
 
     return 0;
+}
+
+*/
+
+int main()
+{
+    try 
+    {
+        CoreGL::Shader shader_1(GL_VERTEX_SHADER, "simple-vert.glsl");
+        shader_1.compile();
+    }
+    catch (std::exception& ex)
+    {
+        std::cout << ex.what();
+    }
 }
