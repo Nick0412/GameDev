@@ -89,12 +89,30 @@ int main()
 
 int main()
 {
+    if (!glfwInit()) { throw std::runtime_error("GLFW failed to init."); }
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+        GLFWwindow* window = glfwCreateWindow(800, 800, "Window Title", NULL, NULL);
+        if (!window)
+        {
+            glfwTerminate();
+            throw std::runtime_error("Window creation failed.");
+        }
+        
+        // Set the current window we want to draw to and inform glad where to draw
+        // OpenGL functions.
+        glfwMakeContextCurrent(window);
+        gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
+        glfwSwapInterval(1);
+
     try 
     {
         CoreGL::Shader shader_1(GL_VERTEX_SHADER, "simple-vert.glsl");
         shader_1.compile();
+        CoreGL::Program prog;
+        prog.attachShader(shader_1);
     }
-    catch (std::exception& ex)
+    catch (const std::exception& ex)
     {
         std::cout << ex.what();
     }

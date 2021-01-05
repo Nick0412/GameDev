@@ -1,5 +1,5 @@
 #include "Program.h"
-#include <iostream>
+
 namespace CoreGL
 {
 
@@ -70,9 +70,14 @@ namespace CoreGL
     }
 
     Program::Program()
-    : m_program_id(glCreateProgram())
+    : m_program_id{glCreateProgram()}
     {
 
+    }
+
+    Program::~Program()
+    {
+        glDeleteProgram(m_program_id);
     }
 
     void Program::attachShader(GLenum shader_type, const std::string& shader_file) const
@@ -81,6 +86,12 @@ namespace CoreGL
         glCompileShader(shader_id);
         checkShaderCompileStatus(shader_id);
         glAttachShader(m_program_id, shader_id);
+    }
+
+    void Program::attachShader(const Shader& shader)
+    {
+        glAttachShader(m_program_id, shader.getId());
+        mapUniforms(shader);
     }
 
     void Program::linkProgram() const
@@ -93,6 +104,48 @@ namespace CoreGL
     void Program::useProgram() const
     {
         glUseProgram(m_program_id);
+    }
+
+    Uniform& Program::operator[](const std::string& uniform_name)
+    {
+        try
+        {
+            return m_uniforms.at(uniform_name); 
+        }
+        catch (const std::out_of_range& ex)
+        {
+            throw;
+        }
+    }
+
+    void Program::mapUniforms(const Shader& shader)
+    {
+        std::stringstream string_stream(shader.m_code);
+        std::string uniform_name;
+        std::string current_text;
+
+        while (!string_stream.eof() && string_stream.good())
+        {
+            string_stream >> current_text;
+            if (current_text == "uniform")
+            {
+                string_stream >> current_text;
+                string_stream >> uniform_name;
+
+                // Remove semicolon from uniform name
+                if (uniform_name.back() == ';')
+                {
+                    uniform_name.pop_back();
+                }
+
+                // Remove 
+                auto bracket_pos = uniform_name.find_first_of("[");
+                uniform_name = uniform_name.substr(0, bracket_pos);
+
+                m_uniforms[uniform_name] = Uniform(glGetUniformLocation(m_program_id, uniform_name.c_str()));
+            }
+
+        }
     }
 
 }

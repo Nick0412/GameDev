@@ -17,7 +17,6 @@ namespace CoreGL
         std::string m_code;
         GLuint m_id;
         std::string m_file;
-        std::string m_code;
 
     public:
         Shader() = delete;
@@ -27,10 +26,10 @@ namespace CoreGL
         GLenum getType() const;
         GLuint getId() const;
 
-        void compile();
+        void compile() const;
 
     public:
-        friend class Progam;
+        friend class Program;
     };
 }
 

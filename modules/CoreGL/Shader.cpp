@@ -1,10 +1,9 @@
 #include "Shader.h"
 
-#include "Utility/File.h"
+#include "File.h"
 
 #include <sstream>
-
-
+#include <vector>
 namespace CoreGL
 {
 #ifdef SHADER_DIR
@@ -13,11 +12,18 @@ namespace CoreGL
 
     Shader::Shader(GLenum shader_type, const std::string& file)
     :   m_type{shader_type}, 
-        m_file{file}, 
+        m_file{file},
         m_id{glCreateShader(shader_type)}
     {
         std::string full_file = s_shader_path + file;
-        m_code = Utility::File::readText(full_file);
+        try 
+        {
+            m_code = Utility::File::readText(full_file);
+        }
+        catch (const std::exception& ex)
+        {
+            throw;
+        }
     }
 
     Shader::~Shader()
@@ -35,7 +41,7 @@ namespace CoreGL
         return m_id;
     }
 
-    void Shader::compile()
+    void Shader::compile() const
     {
         auto code = m_code.c_str();
         glShaderSource(m_id, 1, &code, nullptr);
@@ -46,7 +52,7 @@ namespace CoreGL
         glGetShaderiv(m_id, GL_COMPILE_STATUS, &result);
         glGetShaderiv(m_id, GL_INFO_LOG_LENGTH, &info_length);
 
-        std::string error_message(info_length, '\0');
+        std::vector<GLchar> error_message(info_length, '\0');
         glGetShaderInfoLog(m_id, info_length, nullptr, error_message.data());
 
         if (result != GL_TRUE)
@@ -54,7 +60,7 @@ namespace CoreGL
             std::stringstream stream;
             stream  << "Shader compilation failed:\n"
                     << "File: " << m_file << "\n"
-                    << "Message: " << error_message << "\n";
+                    << "Message: " << std::string(error_message.begin(), error_message.end()) << "\n";
             throw std::runtime_error(stream.str());
         }
     }
