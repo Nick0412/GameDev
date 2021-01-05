@@ -3,16 +3,19 @@
 
 #include "glad/glad.h"
 
+#include <string>
 namespace CoreGL
 {
     class Uniform
     {
     private:
         GLint m_location;
+        GLuint m_program_id;
+        std::string m_uniform_name;
 
     public:
         Uniform() = default;
-        Uniform(const GLint location);
+        Uniform(GLuint program_id, const std::string& uniform_name);
 
         GLint getLocation() const;
 

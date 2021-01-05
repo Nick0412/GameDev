@@ -1,14 +1,15 @@
 #include "Uniform.h"
+#include <iostream>
 
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
 namespace CoreGL
 {
-    Uniform::Uniform(const GLint location)
-    : m_location{location}
+    Uniform::Uniform(GLuint program_id, const std::string& uniform_name)
+    : m_program_id{program_id}, m_uniform_name{uniform_name}
     {
-
+        m_location = glGetUniformLocation(m_program_id, m_uniform_name.c_str());
     }
 
     GLint Uniform::getLocation() const
@@ -89,7 +90,7 @@ namespace CoreGL
     template<>
     void Uniform::setMatrix(GLuint program, const glm::mat4& value, GLsizei count, GLboolean transpose) const
     {
-        glProgramUniformMatrix4fv(program, m_location, count, transpose, glm::value_ptr(value));
+        glProgramUniformMatrix4fv(m_program_id, m_location, count, transpose, glm::value_ptr(value));
     }
 
     // Non square matrices

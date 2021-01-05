@@ -17,10 +17,12 @@ namespace CoreGL
     {
     private:
         GLuint m_program_id;
+        std::vector<Shader> m_attached_shaders;
         std::unordered_map<std::string, Uniform> m_uniforms;
 
     private:
         void mapUniforms(const Shader& shader);
+        void linkProgram() const;
 
     public:
         Program();
@@ -28,7 +30,7 @@ namespace CoreGL
 
         // void attachShader(GLenum shader_type, const std::string& shader_file) const;
         void attachShader(const Shader& shader);
-        void linkProgram() const;
+        void loadProgram();
         void useProgram() const;
 
         GLuint getId() const;

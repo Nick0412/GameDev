@@ -13,18 +13,24 @@ namespace CoreGL
         glDeleteProgram(m_program_id);
     }
 
-    // void Program::attachShader(GLenum shader_type, const std::string& shader_file) const
-    // {
-    //     GLuint shader_id = createShader(shader_type, shader_file);
-    //     glCompileShader(shader_id);
-    //     checkShaderCompileStatus(shader_id);
-    //     glAttachShader(m_program_id, shader_id);
-    // }
-
     void Program::attachShader(const Shader& shader)
     {
         glAttachShader(m_program_id, shader.getId());
-        mapUniforms(shader);
+        m_attached_shaders.push_back(shader);
+    }
+
+    GLuint Program::getId() const
+    {
+        return m_program_id;
+    }
+
+    void Program::loadProgram() 
+    {
+        linkProgram();
+        for (const auto& shader : m_attached_shaders)
+        {
+            mapUniforms(shader);
+        }
     }
 
     void Program::linkProgram() const
@@ -90,8 +96,10 @@ namespace CoreGL
                 // Remove brackets for arrays
                 auto bracket_pos = uniform_name.find_first_of("[");
                 uniform_name = uniform_name.substr(0, bracket_pos);
+                
 
-                m_uniforms[uniform_name] = Uniform(glGetUniformLocation(m_program_id, uniform_name.c_str()));
+                // m_uniforms[uniform_name] = Uniform(glGetUniformLocation(m_program_id, uniform_name.c_str()), m_program_id);
+                m_uniforms[uniform_name] = Uniform(m_program_id, uniform_name);
             }
         }
     }

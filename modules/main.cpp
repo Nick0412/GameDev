@@ -1,6 +1,10 @@
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 #include "Program.h"
 #include "Shader.h"
 #include "Uniform.h"
@@ -55,18 +59,26 @@ int main()
         model.storeIndexData(indicies);
         model.storeDataInAttribute(0, 3, positions);
         
-        CoreGL::Shader shader(GL_VERTEX_SHADER, "simple-vert.glsl");
+        CoreGL::Shader shader(GL_VERTEX_SHADER, "rotating-vert.glsl");
         CoreGL::Shader shader2(GL_FRAGMENT_SHADER, "simple-frag.glsl");
         CoreGL::Program prog;
         prog.attachShader(shader);
         prog.attachShader(shader2);
-        prog.linkProgram();
+        prog.loadProgram();
 
         // Main loop that keeps the window open until it is closed by the user.
         while (!glfwWindowShouldClose(window))
         {
             glClear(GL_COLOR_BUFFER_BIT);
             prog.useProgram();
+
+            glm::mat4 transform = glm::mat4(1.0f);
+            transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+            prog["rotation"].setMatrix(prog.getId(), transform);
+            // auto location = glGetUniformLocation(prog.getId(), "rotation");
+            // glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(transform));
+            // glUniformMatrix4fv(transform, 1, GL_FALSE, glm::value_ptr(transform));
+            // prog["rotation"].setMatrix(prog.getId(), transform);
 
             model.bind();
             model.draw();
