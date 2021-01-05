@@ -3,6 +3,7 @@
 
 #include "Program.h"
 #include "Shader.h"
+#include "Uniform.h"
 #include "VertexModel.h"
 
 #include <cstdlib>
@@ -10,7 +11,7 @@
 #include <stdexcept>
 #include <vector>
 
-/*
+
 int main()
 {
     std::cout << "Beginning Program\n";
@@ -54,16 +55,18 @@ int main()
         model.storeIndexData(indicies);
         model.storeDataInAttribute(0, 3, positions);
         
-        CoreGL::Program program;
-        program.attachShader(GL_VERTEX_SHADER, "simple-vert.glsl");
-        program.attachShader(GL_FRAGMENT_SHADER, "simple-frag.glsl");
-        program.linkProgram();
+        CoreGL::Shader shader(GL_VERTEX_SHADER, "simple-vert.glsl");
+        CoreGL::Shader shader2(GL_FRAGMENT_SHADER, "simple-frag.glsl");
+        CoreGL::Program prog;
+        prog.attachShader(shader);
+        prog.attachShader(shader2);
+        prog.linkProgram();
 
         // Main loop that keeps the window open until it is closed by the user.
         while (!glfwWindowShouldClose(window))
         {
             glClear(GL_COLOR_BUFFER_BIT);
-            program.useProgram();
+            prog.useProgram();
 
             model.bind();
             model.draw();
@@ -83,37 +86,4 @@ int main()
     }
 
     return 0;
-}
-
-*/
-
-int main()
-{
-    if (!glfwInit()) { throw std::runtime_error("GLFW failed to init."); }
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-        GLFWwindow* window = glfwCreateWindow(800, 800, "Window Title", NULL, NULL);
-        if (!window)
-        {
-            glfwTerminate();
-            throw std::runtime_error("Window creation failed.");
-        }
-        
-        // Set the current window we want to draw to and inform glad where to draw
-        // OpenGL functions.
-        glfwMakeContextCurrent(window);
-        gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
-        glfwSwapInterval(1);
-
-    try 
-    {
-        CoreGL::Shader shader_1(GL_VERTEX_SHADER, "simple-vert.glsl");
-        shader_1.compile();
-        CoreGL::Program prog;
-        prog.attachShader(shader_1);
-    }
-    catch (const std::exception& ex)
-    {
-        std::cout << ex.what();
-    }
 }

@@ -26,12 +26,14 @@ namespace CoreGL
         Program();
         ~Program();
 
-        void attachShader(GLenum shader_type, const std::string& shader_file) const;
+        // void attachShader(GLenum shader_type, const std::string& shader_file) const;
         void attachShader(const Shader& shader);
         void linkProgram() const;
         void useProgram() const;
 
+        GLuint getId() const;
         Uniform& operator[](const std::string& uniform_name);
+        GLuint getUniformLocation(const std::string& uniform_name) const;
     };
 }
 

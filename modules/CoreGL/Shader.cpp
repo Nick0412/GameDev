@@ -24,6 +24,8 @@ namespace CoreGL
         {
             throw;
         }
+
+        compile();
     }
 
     Shader::~Shader()

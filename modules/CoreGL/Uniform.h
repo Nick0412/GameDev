@@ -11,7 +11,7 @@ namespace CoreGL
         GLint m_location;
 
     public:
-        Uniform() = delete;
+        Uniform() = default;
         Uniform(const GLint location);
 
         GLint getLocation() const;
