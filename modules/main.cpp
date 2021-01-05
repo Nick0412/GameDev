@@ -74,11 +74,7 @@ int main()
 
             glm::mat4 transform = glm::mat4(1.0f);
             transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-            prog["rotation"].setMatrix(prog.getId(), transform);
-            // auto location = glGetUniformLocation(prog.getId(), "rotation");
-            // glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(transform));
-            // glUniformMatrix4fv(transform, 1, GL_FALSE, glm::value_ptr(transform));
-            // prog["rotation"].setMatrix(prog.getId(), transform);
+            prog["rotation"].setMatrix(transform);
 
             model.bind();
             model.draw();

@@ -21,10 +21,10 @@ namespace CoreGL
 
     public:
         template<typename T>
-        void setVector(GLuint program, const T& value, GLsizei count = 1) const;
+        void setVector(const T& value, GLsizei count = 1) const;
 
         template<typename T>
-        void setMatrix(GLuint program, const T& value, GLsizei count = 1, GLboolean transpose = GL_FALSE) const;
+        void setMatrix(const T& value, GLsizei count = 1, GLboolean transpose = GL_FALSE) const;
     };
 }
 

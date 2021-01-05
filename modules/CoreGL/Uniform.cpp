@@ -19,115 +19,115 @@ namespace CoreGL
 
     // 2D Vectors
     template<>
-    void Uniform::setVector(GLuint program, const glm::vec2& value, GLsizei count) const
+    void Uniform::setVector(const glm::vec2& value, GLsizei count) const
     {
-        glProgramUniform2fv(program, m_location, count, glm::value_ptr(value));
+        glProgramUniform2fv(m_program_id, m_location, count, glm::value_ptr(value));
     }
     
     template<>
-    void Uniform::setVector(GLuint program, const glm::ivec2& value, GLsizei count) const
+    void Uniform::setVector(const glm::ivec2& value, GLsizei count) const
     {
-        glProgramUniform2iv(program, m_location, count, glm::value_ptr(value));
+        glProgramUniform2iv(m_program_id, m_location, count, glm::value_ptr(value));
     }
 
     template<>
-    void Uniform::setVector(GLuint program, const glm::uvec2& value, GLsizei count) const
+    void Uniform::setVector(const glm::uvec2& value, GLsizei count) const
     {
-        glProgramUniform2uiv(program, m_location, count, glm::value_ptr(value));
+        glProgramUniform2uiv(m_program_id, m_location, count, glm::value_ptr(value));
     }
 
     // 3D Vectors
     template<>
-    void Uniform::setVector(GLuint program, const glm::vec3& value, GLsizei count) const
+    void Uniform::setVector(const glm::vec3& value, GLsizei count) const
     {
-        glProgramUniform3fv(program, m_location, count, glm::value_ptr(value));
+        glProgramUniform3fv(m_program_id, m_location, count, glm::value_ptr(value));
     }
     
     template<>
-    void Uniform::setVector(GLuint program, const glm::ivec3& value, GLsizei count) const
+    void Uniform::setVector(const glm::ivec3& value, GLsizei count) const
     {
-        glProgramUniform3iv(program, m_location, count, glm::value_ptr(value));
+        glProgramUniform3iv(m_program_id, m_location, count, glm::value_ptr(value));
     }
 
     template<>
-    void Uniform::setVector(GLuint program, const glm::uvec3& value, GLsizei count) const
+    void Uniform::setVector(const glm::uvec3& value, GLsizei count) const
     {
-        glProgramUniform3uiv(program, m_location, count, glm::value_ptr(value));
+        glProgramUniform3uiv(m_program_id, m_location, count, glm::value_ptr(value));
     }
 
     // 4D Vectors
     template<>
-    void Uniform::setVector(GLuint program, const glm::vec4& value, GLsizei count) const
+    void Uniform::setVector(const glm::vec4& value, GLsizei count) const
     {
-        glProgramUniform4fv(program, m_location, count, glm::value_ptr(value));
+        glProgramUniform4fv(m_program_id, m_location, count, glm::value_ptr(value));
     }
     
     template<>
-    void Uniform::setVector(GLuint program, const glm::ivec4& value, GLsizei count) const
+    void Uniform::setVector(const glm::ivec4& value, GLsizei count) const
     {
-        glProgramUniform4iv(program, m_location, count, glm::value_ptr(value));
+        glProgramUniform4iv(m_program_id, m_location, count, glm::value_ptr(value));
     }
 
     template<>
-    void Uniform::setVector(GLuint program, const glm::uvec4& value, GLsizei count) const
+    void Uniform::setVector(const glm::uvec4& value, GLsizei count) const
     {
-        glProgramUniform4uiv(program, m_location, count, glm::value_ptr(value));
+        glProgramUniform4uiv(m_program_id, m_location, count, glm::value_ptr(value));
     }
 
     // Square matrices
     template<>
-    void Uniform::setMatrix(GLuint program, const glm::mat2& value, GLsizei count, GLboolean transpose) const
+    void Uniform::setMatrix(const glm::mat2& value, GLsizei count, GLboolean transpose) const
     {
-        glProgramUniformMatrix2fv(program, m_location, count, transpose, glm::value_ptr(value));
+        glProgramUniformMatrix2fv(m_program_id, m_location, count, transpose, glm::value_ptr(value));
     }
 
     template<>
-    void Uniform::setMatrix(GLuint program, const glm::mat3& value, GLsizei count, GLboolean transpose) const
+    void Uniform::setMatrix(const glm::mat3& value, GLsizei count, GLboolean transpose) const
     {
-        glProgramUniformMatrix3fv(program, m_location, count, transpose, glm::value_ptr(value));
+        glProgramUniformMatrix3fv(m_program_id, m_location, count, transpose, glm::value_ptr(value));
     }
 
     template<>
-    void Uniform::setMatrix(GLuint program, const glm::mat4& value, GLsizei count, GLboolean transpose) const
+    void Uniform::setMatrix(const glm::mat4& value, GLsizei count, GLboolean transpose) const
     {
         glProgramUniformMatrix4fv(m_program_id, m_location, count, transpose, glm::value_ptr(value));
     }
 
     // Non square matrices
     template<>
-    void Uniform::setMatrix(GLuint program, const glm::mat2x3& value, GLsizei count, GLboolean transpose) const
+    void Uniform::setMatrix(const glm::mat2x3& value, GLsizei count, GLboolean transpose) const
     {
-        glProgramUniformMatrix2x3fv(program, m_location, count, transpose, glm::value_ptr(value));
+        glProgramUniformMatrix2x3fv(m_program_id, m_location, count, transpose, glm::value_ptr(value));
     }
 
     template<>
-    void Uniform::setMatrix(GLuint program, const glm::mat2x4& value, GLsizei count, GLboolean transpose) const
+    void Uniform::setMatrix(const glm::mat2x4& value, GLsizei count, GLboolean transpose) const
     {
-        glProgramUniformMatrix2x4fv(program, m_location, count, transpose, glm::value_ptr(value));
+        glProgramUniformMatrix2x4fv(m_program_id, m_location, count, transpose, glm::value_ptr(value));
     }
 
     template<>
-    void Uniform::setMatrix(GLuint program, const glm::mat3x2& value, GLsizei count, GLboolean transpose) const
+    void Uniform::setMatrix(const glm::mat3x2& value, GLsizei count, GLboolean transpose) const
     {
-        glProgramUniformMatrix3x2fv(program, m_location, count, transpose, glm::value_ptr(value));
+        glProgramUniformMatrix3x2fv(m_program_id, m_location, count, transpose, glm::value_ptr(value));
     }
 
     template<>
-    void Uniform::setMatrix(GLuint program, const glm::mat3x4& value, GLsizei count, GLboolean transpose) const
+    void Uniform::setMatrix(const glm::mat3x4& value, GLsizei count, GLboolean transpose) const
     {
-        glProgramUniformMatrix3x4fv(program, m_location, count, transpose, glm::value_ptr(value));
+        glProgramUniformMatrix3x4fv(m_program_id, m_location, count, transpose, glm::value_ptr(value));
     }
 
     template<>
-    void Uniform::setMatrix(GLuint program, const glm::mat4x2& value, GLsizei count, GLboolean transpose) const
+    void Uniform::setMatrix(const glm::mat4x2& value, GLsizei count, GLboolean transpose) const
     {
-        glProgramUniformMatrix4x2fv(program, m_location, count, transpose, glm::value_ptr(value));
+        glProgramUniformMatrix4x2fv(m_program_id, m_location, count, transpose, glm::value_ptr(value));
     }
 
     template<>
-    void Uniform::setMatrix(GLuint program, const glm::mat4x3& value, GLsizei count, GLboolean transpose) const
+    void Uniform::setMatrix(const glm::mat4x3& value, GLsizei count, GLboolean transpose) const
     {
-        glProgramUniformMatrix4x3fv(program, m_location, count, transpose, glm::value_ptr(value));
+        glProgramUniformMatrix4x3fv(m_program_id, m_location, count, transpose, glm::value_ptr(value));
     }
     
 }
