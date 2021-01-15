@@ -27,7 +27,7 @@ namespace Utility
         catch (const std::exception& ex) 
         {   
             std::stringstream ex_stream;
-            ex_stream  << ex.what() << "\n"
+            ex_stream   << ex.what() << "\n"
                         << "File: " << path; 
             throw std::runtime_error(ex_stream.str());
         }
